@@ -35,5 +35,108 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const playBtn = document.querySelector(".btn-play");
+
+        if (playBtn) {
+            playBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+            });
+            checkAuth(playBtn);
+        }
+    });
+
+    async function checkAuth(btnElement) {
+        try {
+            const response = await fetch('/api/auth');
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Logged in:", data.isAuthed);
+
+                btnElement.onclick = () => {
+                    window.location.replace("/game");
+                };
+            } else {
+                btnElement.onclick = () => {
+                    createPlayer(btnElement);
+                };
+            }
+        }
+        catch (error) {
+        console.error("Network error:", error);
+        }
+    }
+
+    async function createPlayer(btnElement) {
+        // Create the Form
+        const form = document.createElement("form");
+        form.id = "loginForm";
+        form.style.display = "inline-flex";
+        form.style.gap = "10px";
+
+        // Create input
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = "username";
+        input.name = "username";
+        input.placeholder = "Enter username...";
+        input.required = true;
+
+        // Submit Btn
+        const submitBtn = document.createElement("button");
+        submitBtn.type = "submit";
+        submitBtn.innerText = "Start";
+        submitBtn.classList.add("btn", "btn-success");
+
+
+       // Append elements to form
+        form.appendChild(input);
+        form.appendChild(submitBtn);
+
+        btnElement.replaceWith(form);
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const username = input.value
+            const user = { uname: username };
+
+
+            fetch('/api/createplayer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message) });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Server Response:", data);
+                window.location.replace("/game")
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Start";
+            });
+        });
+    }
+            
+
+        
+            
+        
+    
+
+
+</script>
 {% endblock %}
 
