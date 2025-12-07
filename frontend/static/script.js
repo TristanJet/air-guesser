@@ -7,7 +7,7 @@ function addMarkers(locations) {
         // Draw markets
          gameLayer.selectAll('.poi-market')
             .classed('previous-round', true)  // Add a class for styling
-            .style('fill', '#ffaaaa')         // Lighter red
+            .style('fill', '#4e738bff')         // Lighter red
             .style('opacity', 0.5)            // Semi-transparent
             .attr('r', 4); 
 
@@ -23,7 +23,7 @@ function addMarkers(locations) {
             .attr('y1', y1)
             .attr('x2', x2)
             .attr('y2', y2)
-            .style('stroke', '#ff4444')
+            .style('stroke', '#005D9B')
             .style('stroke-width', 2)
             .style('stroke-dasharray', '5,5')  // Dashed line
             .style('opacity', 0.6);
@@ -37,7 +37,7 @@ function addMarkers(locations) {
             .attr('cx', projection([loc.lon, loc.lat])[0])
             .attr('cy', projection([loc.lon, loc.lat])[1])
             .attr('r', 6)
-            .style('fill', '#ff4444')
+            .style('fill', '#c91515ff')
             .style('stroke', 'white')
             .style('stroke-width', 2);
         });
