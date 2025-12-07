@@ -6,7 +6,8 @@ dist = distance.distance
 
 def main():
     score = 0
-    intv = 20
+    q = 10
+    intv = 360/q
     min = -180
     max = min + intv
 
