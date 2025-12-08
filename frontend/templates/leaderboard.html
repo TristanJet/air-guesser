@@ -4,42 +4,34 @@
 {% block title %}TeamGuesser - Leaderboard{% endblock %}
 
 {% block content %}
+
+<script src="{{ url_for('static', filename='script2.js') }}" defer></script>
+
 <div class="leaderboard-container">
     <div class="leaderboard-header">
         <h1> Leaderboard</h1>
-        <p class="leaderboard-subtitle">Top players around the world</p>
+        <p class="leaderboard-subtitle">Top players on the server</p>
     </div>
 
     <!-- Leaderboard Table -->
     <div class="leaderboard-card card">
-        <!-- <table class="leaderboard-table">
+        <table class="leaderboard-table">
             <thead>
                 <tr>
-                    <th class="player-col">Player</th>
-                    <th class="score-col">Score</th>
-                    <th class="games-col">Games</th>
-                    <th class="avg-col">Avg</th>
+					<th width="200">Rank</th>
+                    <th width="400">Player</th>
+                    <th width="200">Best Score</th>
                 </tr>
             </thead>
-            <tbody id="leaderboardBody">
-                <tr class="player-row">
-                    <td class="rank-cell">
-                    </td>
-                    <td class="player-cell">
-                        <div class="player-info">
-                            <div class="player-avatar"></div>
-                            <span class="player-name"></span>
-                        </div>
-                    </td>
-                    <td class="score-cell">
-                        <span class="score-value"></span>
-                    </td>
-                    <td class="games-cell"></td>
-                    <td class="avg-cell"></td>
+            <tbody id="target">
+                <tr>
+                    <td height="60" class="player-name"></td>
+                    <td height="60" class="player-name"></td>
+					<td height="60" class="score-value"></td>
                 </tr>
                 
-                <tr>
-                    <td colspan="5" class="empty-state">
+				<tr id="emptymsg">
+                    <td colspan="5" height="100" class="empty-state">
                         <div class="empty-message">
                             <div class="empty-icon">🎮</div>
                             <p>No scores yet!</p>
@@ -49,7 +41,7 @@
                 </tr>
              
             </tbody>
-        </table> -->
+        </table>
     </div>
 
 </div>
