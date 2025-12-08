@@ -94,7 +94,7 @@ def api():
 @app.route("/api/airports")
 def get_airports():
     min_l = -180
-    q = 10
+    q = 8
     intv = 360 / q  # 36 degrees
     max_l = min_l + intv
 
@@ -107,9 +107,10 @@ def get_airports():
             ap[0] = ap[1]
         airports = getAirports(min_l, max_l)
         
-        if len(airports) < 2:
+        if len(airports) < 1:
             # If we hit the middle of the ocen with no airports 
             # skip this slice and keep moving East.
+            print("skip")
             min_l += intv
             max_l += intv
             continue

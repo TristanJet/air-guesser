@@ -10,16 +10,9 @@
         <p class="leaderboard-subtitle">Top players around the world</p>
     </div>
 
-    <!-- Filter Tabs -->
-    <div class="filter-tabs">
-        <button class="tab-btn active" onclick="">All Time</button>
-        <button class="tab-btn" onclick="">This Week</button>
-        <button class="tab-btn" onclick="">Today</button>
-    </div>
-
     <!-- Leaderboard Table -->
     <div class="leaderboard-card card">
-        <table class="leaderboard-table">
+        <!-- <table class="leaderboard-table">
             <thead>
                 <tr>
                     <th class="player-col">Player</th>
@@ -29,32 +22,22 @@
                 </tr>
             </thead>
             <tbody id="leaderboardBody">
-                {% for player in leaderboard %}
-                <tr class="player-row {% if loop.index <= 3 %}top-player{% endif %}">
+                <tr class="player-row">
                     <td class="rank-cell">
-                        {% if loop.index == 1 %}
-                            <span class="medal gold">🥇</span>
-                        {% elif loop.index == 2 %}
-                            <span class="medal silver">🥈</span>
-                        {% elif loop.index == 3 %}
-                            <span class="medal bronze">🥉</span>
-                        {% else %}
-                            <span class="rank-number">{{ loop.index }}</span>
-                        {% endif %}
                     </td>
                     <td class="player-cell">
                         <div class="player-info">
-                            <div class="player-avatar">{{ player.name[0].upper() }}</div>
-                            <span class="player-name">{{ player.name }}</span>
+                            <div class="player-avatar"></div>
+                            <span class="player-name"></span>
                         </div>
                     </td>
                     <td class="score-cell">
-                        <span class="score-value">{{ player.score }}</span>
+                        <span class="score-value"></span>
                     </td>
-                    <td class="games-cell">{{ player.games }}</td>
-                    <td class="avg-cell">{{ (player.score / player.games)|round(0)|int }}</td>
+                    <td class="games-cell"></td>
+                    <td class="avg-cell"></td>
                 </tr>
-                {% else %}
+                
                 <tr>
                     <td colspan="5" class="empty-state">
                         <div class="empty-message">
@@ -64,20 +47,10 @@
                         </div>
                     </td>
                 </tr>
-                {% endfor %}
+             
             </tbody>
-        </table>
+        </table> -->
     </div>
 
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{{ url_for('game') }}" class="btn btn-primary btn-large">
-            ▶ Play Now
-        </a>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">
-            Back to Home
-        </a>
-    </div>
 </div>
 {% endblock %}
