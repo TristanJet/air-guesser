@@ -41,16 +41,18 @@ class Player:
         self.name = name
         self.id = id
 
-        self.iq = 0
-        self.scores = []
-        self.total_score = 0
+        self.ig = 0
         self.game = Game()
+        self.diffs = []
+        self.sumdiffs = 0
 
-    def handleGuess(self, g) -> tuple:
-        return (0, self.game.fin)
-
-    def addScore(self, score: int):
-        self.scores.append(abs(score))
+    def handleGuess(self, g: int) -> tuple:
+        reald = self.game.dist[self.ig]
+        diff = abs(g - reald)
+        self.diffs.append(diff)
+        self.ig += 1
+        self.game.fin = self.ig == len(self.game.dist)
+        return (diff, reald, sum(self.diffs), self.game.fin)
 
 def genId() -> int:
     return random.randint(10000, 99999)
@@ -85,15 +87,22 @@ def airportDistance(intv: int) -> tuple:
 
 def test():
     db.connect()
-    ap, d = airportDistance(Game.interval)
-    for x in ap:
-        print(x)
+    player = Player("Tristan", 1234)
+    player.game.start()
+    print(player.game.dist)
     print("----------------")
-    for x in d:
-        print(x)
-    i = 0
-    while i + 1 < Game.nq:
-        print(f"1: {ap[i][0]} 2: {ap[i+1][0]}")
-        print(geodesic((ap[i][3], ap[i][4]), (ap[i+1][3], ap[i+1][4])).kilometers)
-        i += 1
+    g = 3000
+    r = player.handleGuess(g)
+    print(g)
+    print(r)
+    g = 5000
+    r = player.handleGuess(g)
+    print(g)
+    print(r)
+    g = 2000
+    r = player.handleGuess(g)
+    print(g)
+    print(r)
+
+test()
 
