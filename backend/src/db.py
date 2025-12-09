@@ -18,14 +18,20 @@ class UninitiatedError(Exception):
 def connect():
     global conn
     global cur
-    conn = mysql.connector.connect(
-        host='127.0.0.1',
-        port=3306,
-        user=env['SQL_USER'],
-        password=env['SQL_PSWD'],
-        database=env['DATABASE'],
-    )
-    cur = conn.cursor()
+    try:
+        conn = mysql.connector.connect(
+            host=env["SQL_HOST"],
+            port=env["SQL_PORT"],
+            user=env["SQL_USER"],
+            password=env["SQL_PSWD"],
+            database=env["DATABASE"],
+        )
+        cur = conn.cursor()
+    except mysql.connector.DatabaseError as e:
+        print(f"Error: {e.msg}")
+        print(f"Info: Have you added your values to the .env file?")
+        exit()
+
 
 def close():
     global conn
@@ -41,7 +47,7 @@ def getCountriesInRange(min, max) -> list:
     return list(map(lambda x: x[0], cur.fetchall()))
 
 ''' Only municipality can be NULL, rest of values are guaranteed '''
-def getAirports(c, min, max):
+def getAirports(c, min, max) -> list[tuple]:
     global cur
     if cur == None: raise UninitiatedError 
     query = ("SELECT ap.name, c.name as country, ap.municipality, ap.latitude_deg, ap.longitude_deg "
