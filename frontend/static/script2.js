@@ -1,19 +1,5 @@
 let target = document.getElementById("target")
 
-n1 = "Jen Erique"
-n2 = "Tippi Kal"
-n3 = "Anne Remarkable"
-
-s1 = Math.ceil(Math.random() * 1000) * 10
-s2 = Math.ceil(Math.random() * 1000)
-s3 = Math.ceil(Math.random() * 1000)
-
-// lb = [
-// {"name" : n1, "score" : s1},
-// {"name" : n2, "score" : s2},
-// {"name" : n3, "score" : s3}
-// ]
-
 async function initeval(){
 	target.innerHTML = ""
 
