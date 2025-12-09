@@ -69,7 +69,6 @@ class Game:
                         "long": n[4],
                     }
                 ],
-                "distance": self.dist[i],
             })
             i += 1
         return out
