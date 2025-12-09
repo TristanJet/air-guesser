@@ -37,7 +37,7 @@ class App:
 class Game:
     '''Initialized on start and not mutated afterwards'''
 
-    nq = 2
+    nq = 8
     interval = 360 // (nq + 1)
     def __init__(self):
         self.airports: list[tuple] = [] # Each airport is a tuple: (name, country, ?municipality, lat, long)
