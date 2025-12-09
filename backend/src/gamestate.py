@@ -23,7 +23,7 @@ class Game:
     nq = 8
     interval = 360 // nq
     def __init__(self):
-        self.airports = []
+        self.airports = [] # Each airport is a tuple: (name, country, ?municipality, lat, long)
         self.dist = []
         self.sumdist = 0
         self.fin = True
@@ -32,6 +32,12 @@ class Game:
         self.fin = False
         self.airports, self.dist = airportDistance(Game.interval)
         self.sumdist = sum(self.dist)
+
+    def airportCoords(self) -> list[tuple]:
+        out = []
+        for x in self.airports:
+            out.append((x[3], x[4]))
+        return out
 
 
 class Player:
