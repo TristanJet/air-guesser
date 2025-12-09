@@ -38,14 +38,14 @@ function addMarkers(locations) {
     });
 }
 
-const width = 1000;
-const height = 750;
+const width = 1050;
+const height = 850;
 console.log('line 71')
 
 // Projection configuration
 const projection = d3.geoMercator()
-    .scale(150)
-    .translate([width / 2, height / 1.7]);
+    .scale(140)
+    .translate([width / 2, height / 1.8]);
 
 let svg, path, countries;
 

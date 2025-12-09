@@ -86,12 +86,15 @@
         input.name = "username";
         input.placeholder = "Enter username...";
         input.required = true;
+        input.classList.add("input-group")
+        input.setAttribute("autocomplete", "off");
 
         // Submit Btn
         const submitBtn = document.createElement("button");
         submitBtn.type = "submit";
         submitBtn.innerText = "Start";
         submitBtn.classList.add("btn", "btn-success");
+
 
 
        // Append elements to form
