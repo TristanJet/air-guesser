@@ -1,11 +1,11 @@
 from flask import Flask, request, make_response, render_template
-from gamestate import Game
+from gamestate import App
 
 frontend_dir = "../../frontend/"
 app = Flask(__name__, template_folder=frontend_dir + "templates/", static_folder=frontend_dir+ "static/")
 
 cookie_key = "sessionId"
-game = Game()
+gapp = App()
 
 @app.route("/")
 def index():
@@ -32,14 +32,22 @@ def api():
         "status": "online",
     }, 200
 
-@app.route("/api/airports")
-def get_airports():
-    return "airports"
+@app.route("/api/newgame")
+def newgame():
+    id = request.cookies.get(cookie_key)
+    if id == None or gapp.checkSesh(int(id)) == False:
+        return {
+            "message": "Unauthorized",
+        }, 401
+
+    player = gapp.players[int(id)]
+    player.game.start()
+    return player.game.airportData()
 
 @app.route("/api/auth")
 def auth():
     id = request.cookies.get(cookie_key)
-    authed = game.checkSesh(int(id)) if id != None else False
+    authed = gapp.checkSesh(int(id)) if id != None else False
     return {
         "isAuthed": authed,
     }, 200 if authed else 401
@@ -59,7 +67,7 @@ def apiCreatePlayer():
 
     id = request.cookies.get(cookie_key)
     if id != None:
-        if game.checkSesh(int(id)):
+        if gapp.checkSesh(int(id)):
             return {
                 "message": "User already exists",
             }, 400
@@ -70,10 +78,10 @@ def apiCreatePlayer():
             "message": "No Name",
         }, 400
 
-    id = game.createPlayer(name)
+    id = gapp.createPlayer(name)
     resp = make_response({"message": f"{name} created successfully"}, 201)
     resp.set_cookie(cookie_key, str(id))
-    print(f"USER CREATED: {game.players[id].name}")
+    print(f"USER CREATED: {gapp.players[id].name}")
     return resp
 
 @app.route("/api/distance", methods=["GET", "POST"])
@@ -90,7 +98,7 @@ def apiPostDistance():
         }, 415
 
     id = request.cookies.get(cookie_key)
-    if id == None or game.checkSesh(int(id)) == False:
+    if id == None or gapp.checkSesh(int(id)) == False:
         return {
             "message": "Unauthorized",
         }, 401
@@ -101,15 +109,17 @@ def apiPostDistance():
             "message": "No guess",
         }, 400
 
-    r = game.handleGuess(guess)
-    response = {
-        "distance": r[0],
-        "finished": r[1]
-    }
+    try:
+        g = int(guess)
+    except ValueError:
+        return {
+            "message": "Invalid guess",
+        }, 400
 
-    # way to handle final question to get score
-    # DOES NOT WORK we do not have this method Tristan Help!! 
-    #if r[1]:
-        #response["total_score"] = game.getTotalScore(int(id))
-
-    return response, 200
+    r = gapp.players[int(id)].handleGuess(g)
+    return {
+        "guess-diff": r[0],
+        "actual-distance": r[1],
+        "total-diff": r[2],
+        "finished": r[3],
+    }, 200

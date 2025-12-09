@@ -21,7 +21,7 @@ class Game:
     '''Initialized on start and not mutated afterwards'''
 
     nq = 8
-    interval = 360 // nq
+    interval = 360 // (nq + 1)
     def __init__(self):
         self.airports = [] # Each airport is a tuple: (name, country, ?municipality, lat, long)
         self.dist = []
@@ -33,10 +33,30 @@ class Game:
         self.airports, self.dist = airportDistance(Game.interval)
         self.sumdist = sum(self.dist)
 
-    def airportCoords(self) -> list[tuple]:
+    def airportData(self) -> list[dict]:
         out = []
-        for x in self.airports:
-            out.append((x[3], x[4]))
+        i = 0
+        while i+1 < len(self.airports):
+            c = self.airports[i]
+            n = self.airports[i+1]
+            out.append({
+                "airports": [
+                    {
+                        "name": c[0],
+                        "country": c[1],
+                        "lat": c[3],
+                        "long": c[4],
+                    },
+                    {
+                        "name": n[0],
+                        "country": n[1],
+                        "lat": n[3],
+                        "long": n[4],
+                    }
+                ],
+                "distance": self.dist[i],
+            })
+            i += 1
         return out
 
 
@@ -95,20 +115,9 @@ def test():
     db.connect()
     player = Player("Tristan", 1234)
     player.game.start()
+    aps = player.game.airportData()
+    print(len(aps))
     print(player.game.dist)
-    print("----------------")
-    g = 3000
-    r = player.handleGuess(g)
-    print(g)
-    print(r)
-    g = 5000
-    r = player.handleGuess(g)
-    print(g)
-    print(r)
-    g = 2000
-    r = player.handleGuess(g)
-    print(g)
-    print(r)
+    print(len(player.game.airports))
 
-test()
-
+# test()
