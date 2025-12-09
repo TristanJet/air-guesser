@@ -5,8 +5,8 @@ from geopy.distance import geodesic
 class App:
     def __init__(self):
         db.connect()
-        self.players = {}
-        self.lb = []
+        self.players: dict[int, Player] = {}
+        self.lb: list[tuple] = []
 
     def checkSesh(self, id: int) -> bool:
         print(f"Checking: {id}")
@@ -17,19 +17,34 @@ class App:
         self.players[id] = Player(n, id)
         return id
 
+    def addLeaderboard(self, id: int):
+        player = self.players.get(id)
+        if player == None: raise Exception
+        self.lb.append((id, player.name, player.sumdiffs))
+        self.lb.sort(key=lambda x: x[2])
+        return
+
+    def getLeaderboard(self) -> list[dict]:
+        out = []
+        i = 0
+        while i < len(self.lb):
+            out.append({
+                self.lb[i][1]:self.lb[i][2] 
+            })
+            i += 1
+        return out
+
 class Game:
     '''Initialized on start and not mutated afterwards'''
 
-    nq = 8
+    nq = 2
     interval = 360 // (nq + 1)
     def __init__(self):
-        self.airports = [] # Each airport is a tuple: (name, country, ?municipality, lat, long)
-        self.dist = []
+        self.airports: list[tuple] = [] # Each airport is a tuple: (name, country, ?municipality, lat, long)
+        self.dist: list[int] = []
         self.sumdist = 0
-        self.fin = True
 
     def start(self):
-        self.fin = False
         self.airports, self.dist = airportDistance(Game.interval)
         self.sumdist = sum(self.dist)
 
@@ -69,16 +84,17 @@ class Player:
 
         self.ig = 0
         self.game = Game()
-        self.diffs = []
+        self.diffs: list[int] = []
         self.sumdiffs = 0
 
     def handleGuess(self, g: int) -> tuple:
         reald = self.game.dist[self.ig]
         diff = abs(g - reald)
         self.diffs.append(diff)
+        self.sumdiffs = sum(self.diffs)
         self.ig += 1
-        self.game.fin = self.ig == len(self.game.dist)
-        return (diff, reald, sum(self.diffs), self.game.fin)
+        fin = self.ig == len(self.game.dist)
+        return (diff, reald, self.sumdiffs, fin)
 
 def genId() -> int:
     return random.randint(10000, 99999)
@@ -113,11 +129,19 @@ def airportDistance(intv: int) -> tuple:
 
 def test():
     db.connect()
-    player = Player("Tristan", 1234)
-    player.game.start()
-    aps = player.game.airportData()
-    print(len(aps))
-    print(player.game.dist)
-    print(len(player.game.airports))
+    app = App()
+    id1 = app.createPlayer("Tristan")
+    id2 = app.createPlayer("Jet")
+    p1 = app.players[id1]
+    p2 = app.players[id2]
+    p1.game.start()
+    p2.game.start()
+    p1.handleGuess(3000)
+    p2.handleGuess(3500)
+    r2 = p2.handleGuess(7000)
+    r1 = p1.handleGuess(4000)
+    if r1[3]: app.addLeaderboard(id1)
+    if r2[3]: app.addLeaderboard(id2)
+    print(app.getLeaderboard())
 
-# test()
+test()

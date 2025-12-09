@@ -116,10 +116,18 @@ def apiPostDistance():
             "message": "Invalid guess",
         }, 400
 
-    r = gapp.players[int(id)].handleGuess(g)
+    p = gapp.players[int(id)]
+    r = p.handleGuess(g)
+    if r[3]: gapp.addLeaderboard(int(id))
     return {
         "guess-diff": r[0],
         "actual-distance": r[1],
         "total-diff": r[2],
         "finished": r[3],
+    }, 200
+
+@app.route("/api/leaderboard")
+def apiLeaderboard():
+    return {
+        "sortedLb": gapp.getLeaderboard(),
     }, 200
