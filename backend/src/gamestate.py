@@ -135,7 +135,7 @@ def airportDistance(intv: int) -> tuple:
     queried = db.getAirports(random.choice(countries), min, max)
     ap = [random.choice(queried), None]
     airports.append(ap[0])
-    while max != 180:
+    while max < 180:
         min += intv
         max += intv
 
