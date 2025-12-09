@@ -34,6 +34,14 @@ class App:
             i += 1
         return out
 
+    def resetPlayerGame(self, id: int) -> bool:
+        """Reset player's game state for a new round"""
+        player = self.players.get(id)
+        if player is None:
+            return False
+        player.resetGame()
+        return True
+
 class Game:
     '''Initialized on start and not mutated afterwards'''
 
@@ -87,6 +95,7 @@ class Player:
         self.sumdiffs = 0
 
     def handleGuess(self, g: int) -> tuple:
+
         reald = self.game.dist[self.ig]
         diff = abs(g - reald)
         self.diffs.append(diff)
@@ -94,6 +103,15 @@ class Player:
         self.ig += 1
         fin = self.ig == len(self.game.dist)
         return (diff, reald, self.sumdiffs, fin)
+
+    def resetGame(self):
+        """Reset player state for a new game"""
+        self.ig = 0
+        self.game = Game()
+        self.game.start()
+        self.diffs = []
+        self.sumdiffs = 0
+
 
 def genId() -> int:
     return random.randint(10000, 99999)
@@ -143,4 +161,3 @@ def test():
     if r2[3]: app.addLeaderboard(id2)
     print(app.getLeaderboard())
 
-test()

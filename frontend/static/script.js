@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderRound(index) {
     if (!gameData || index >= gameData.length) {
         console.log("Game Over or No Data");
+        window.location.href = '/leaderboard'; 
         return;
     }
   
@@ -200,15 +201,71 @@ function handleGuessSubmit(e) {
     })
     .then(data => {
         console.log("Server Response:", data);
+        
+        // Show results with blur effect and wait for user click
+        showResults(userGuess, data);
         if (data.finished) {
-            alert("Game Over! Your total score is: " + data.total_score);
-            window.location.replace("leaderboard.html");
+            window.location.replace("/leaderboard");
             return;
         }
-
         q += 1;
         renderRound(q);
         inputField.value = '';
+
+        
+    
     })
     .catch(error => console.error('Error:', error));
 }
+
+function showResults(userGuess, data, inputField){
+    const round = document.querySelector("#round")
+    const score = document.querySelector("#score")
+    const map = document.querySelector("#map");
+    const tip_section = document.createElement("div")
+    const tip_icon = document.createElement("div")
+    const tip_text = document.createElement("p")
+    const answer_section = document.querySelector(".answer-section")
+    // Blur map
+    map.classList.add("blurred")
+
+    //tip
+
+    // Overlay
+    const overlay = document.createElement("div")
+    overlay.className = "results-overlay";
+    overlay.innerHTML = `
+        <h3>Round ${q + 1} Results</h3>
+        <p><strong>Your Guess:</strong> ${userGuess} km</p>
+        <p><strong>Actual Distance:</strong> ${data["actual-distance"]} km</p>
+        <p><strong>Difference:</strong> ${data["guess-diff"]} km</p>
+        <p><strong>Total Score:</strong> ${data["total-diff"]} km</p>
+    `;
+    document.body.appendChild(overlay);
+    answer_section.appendChild(tip_section);
+
+    tip_section.appendChild(tip_icon);
+    tip_section.appendChild(tip_text);
+    tip_section.id = "tip-section";
+    tip_icon.classList.add("tip-icon");
+    tip_text.id = "tip-text"
+    tip_text.innerText = "Click to continue"
+    tip_section.classList.add("show")
+
+    round.innerHTML = `${q + 1}`
+    score.innerHTML = `${data["total-diff"]}`
+
+    // Add click to handle overlay
+    document.addEventListener("click", () => {
+        map.classList.remove("blurred");
+        overlay.remove();
+        tip_section.remove();
+
+        
+    });
+}
+
+
+
+const round = document.querySelector("#round")
+const score = document.querySelector("#score")

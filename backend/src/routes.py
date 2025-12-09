@@ -13,6 +13,10 @@ def index():
 
 @app.route("/game")
 def play():
+    id = request.cookies.get(cookie_key)
+
+    if id is not None and gapp.checkSesh(int(id)):
+        gapp.resetPlayerGame(int(id))
 
     return render_template("game.html")
 
@@ -131,3 +135,7 @@ def apiLeaderboard():
     return {
         "sortedLb": gapp.getLeaderboard(),
     }, 200
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

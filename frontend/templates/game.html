@@ -66,6 +66,67 @@
         .zoom-btn:hover {
             background-color: #f0f0f0;
         }
+
+        #map {
+            transition: filter 0.3s ease;
+        }
+
+        #map.blurred {
+            filter: blur(8px);
+        }
+
+        .results-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .results-overlay h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+
+        .results-overlay p {
+            margin: 10px 0;
+        }
+
+        #tip-section {
+            margin-top: 15px;
+            padding: 12px 16px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+        }
+
+        #tip-section.show {
+        opacity: 1;
+        transform: translateY(0);
+        }
+
+        .tip-icon::before {
+            content: "💡";
+            font-size: 1.2rem;
+        }
+
+        #tip-text {
+            margin: 0;
+            color: #856404;
+            font-size: 0.9rem;
+        }
+
+
         </style>
 
     <div class="game-container">
@@ -133,6 +194,7 @@
                             Submit Answer
                         </button>
                     </form>
+
                     
                     
                 </div>
