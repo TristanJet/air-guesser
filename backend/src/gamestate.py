@@ -3,6 +3,8 @@ import db
 from geopy.distance import geodesic
 
 class App:
+    '''Data with a lifetime of the app'''
+
     def __init__(self):
         db.connect()
         self.players: dict[int, Player] = {}
@@ -45,7 +47,7 @@ class App:
 class Game:
     '''Initialized on start and not mutated afterwards'''
 
-    nq = 8
+    nq = 8 # Number of questions per game
     interval = 360 // (nq + 1)
     def __init__(self):
         self.airports: list[tuple] = [] # Each airport is a tuple: (name, country, ?municipality, lat, long)
@@ -95,7 +97,6 @@ class Player:
         self.sumdiffs = 0
 
     def handleGuess(self, g: int) -> tuple:
-
         reald = self.game.dist[self.ig]
         diff = abs(g - reald)
         self.diffs.append(diff)
