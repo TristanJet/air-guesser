@@ -5,6 +5,7 @@ frontend_dir = "../../frontend/"
 app = Flask(__name__, template_folder=frontend_dir + "templates/", static_folder=frontend_dir+ "static/")
 
 cookie_key = "sessionId"
+uname_key = "uname"
 gapp = App()
 
 @app.route("/")
@@ -13,11 +14,6 @@ def index():
 
 @app.route("/game")
 def play():
-    id = request.cookies.get(cookie_key)
-
-    if id is not None and gapp.checkSesh(int(id)):
-        gapp.resetPlayerGame(int(id))
-
     return render_template("game.html")
 
 @app.route("/rules")
@@ -44,9 +40,9 @@ def newgame():
             "message": "Unauthorized",
         }, 401
 
-    player = gapp.players[int(id)]
-    player.game.start()
-    return player.game.airportData()
+    p = gapp.players[int(id)]
+    return p.handleNewGame()
+
 
 @app.route("/api/auth")
 def auth():
@@ -76,7 +72,7 @@ def apiCreatePlayer():
                 "message": "User already exists",
             }, 400
 
-    name = data.get("uname")
+    name = data.get(uname_key)
     if name == None:
         return {
             "message": "No Name",

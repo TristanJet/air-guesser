@@ -20,29 +20,31 @@ class App:
         return id
 
     def addLeaderboard(self, id: int):
+        print(f"adding: {id} to leaderboard")
         player = self.players.get(id)
         if player == None: raise Exception
-        self.lb.append((id, player.name, player.sumdiffs))
+
+        index = searchLb(self.lb, id)
+        if index == None:
+            self.lb.append((id, player.name, player.sumdiffs))
+        else:
+            if self.lb[index][2] > player.sumdiffs:
+                self.lb[index] = (id, player.name, player.sumdiffs)
+            else:
+                return
+
         self.lb.sort(key=lambda x: x[2])
-        return
 
     def getLeaderboard(self) -> list[dict]:
         out = []
         i = 0
         while i < len(self.lb):
             out.append({
-                self.lb[i][1]:self.lb[i][2] 
+                "name":self.lb[i][1], 
+                "score":self.lb[i][2],
             })
             i += 1
         return out
-
-    def resetPlayerGame(self, id: int) -> bool:
-        """Reset player's game state for a new round"""
-        player = self.players.get(id)
-        if player is None:
-            return False
-        player.resetGame()
-        return True
 
 class Game:
     '''Initialized on start and not mutated afterwards'''
@@ -97,6 +99,7 @@ class Player:
         self.sumdiffs = 0
 
     def handleGuess(self, g: int) -> tuple:
+        if self.ig >= len(self.game.dist): return (0, 0, self.sumdiffs, True)
         reald = self.game.dist[self.ig]
         diff = abs(g - reald)
         self.diffs.append(diff)
@@ -105,11 +108,15 @@ class Player:
         fin = self.ig == len(self.game.dist)
         return (diff, reald, self.sumdiffs, fin)
 
-    def resetGame(self):
+    def handleNewGame(self) -> list[dict]:
+        if self.ig > 0:
+            self.reset()
+        self.game.start()
+        return self.game.airportData()
+
+    def reset(self):
         """Reset player state for a new game"""
         self.ig = 0
-        self.game = Game()
-        self.game.start()
         self.diffs = []
         self.sumdiffs = 0
 
@@ -144,6 +151,14 @@ def airportDistance(intv: int) -> tuple:
         ap[0] = ap[1]
 
     return airports, distances
+
+def searchLb(table: list[tuple], id: int):
+    i = 0
+    while i < len(table):
+        if table[i][0] == id:
+            return i
+        i += 1
+    return None
 
 def test():
     db.connect()

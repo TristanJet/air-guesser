@@ -1,10 +1,5 @@
 let target = document.getElementById("target")
 
-
-
-
-// random made up leaderboard, replace with real thing when it's done
-
 n1 = "Jen Erique"
 n2 = "Tippi Kal"
 n3 = "Anne Remarkable"
@@ -13,34 +8,43 @@ s1 = Math.ceil(Math.random() * 1000) * 10
 s2 = Math.ceil(Math.random() * 1000)
 s3 = Math.ceil(Math.random() * 1000)
 
-LBJSon = [
-{"name" : n1, "score" : s1},
-{"name" : n2, "score" : s2},
-{"name" : n3, "score" : s3}
-]
+// lb = [
+// {"name" : n1, "score" : s1},
+// {"name" : n2, "score" : s2},
+// {"name" : n3, "score" : s3}
+// ]
 
-// uncomment to test empty leaderboard
-//LBJSon = []
-
-
-
-
-function initeval(){
+async function initeval(){
 	target.innerHTML = ""
+
+	const resp = await fetch("/api/leaderboard");
+	if (!resp.ok) {
+		error();
+		return;
+	}
+	const json = await resp.json();
+	const lbarr = json.sortedLb;
+	if (lbarr == null) {
+		error();
+		return;
+	}
 	
-	LBJSon.sort(function(a, b){return a.score - b.score}); 
-	
-	if (LBJSon.length == 0){
+	if (lbarr.length == 0){
 		console.log("heading into empty")
 		empty()
 	} else {
 		console.log("heading into ranking")
-		rankemup()
+		rankemup(lbarr)
 	}
 }
 
-function rankemup(){	
-	for (i = 0; i < LBJSon.length; i++){
+function error() {
+	console.log("Error fetching leaderboard")
+	empty()
+}
+
+function rankemup(lbarr){	
+	for (i = 0; i < lbarr.length; i++){
 		let main = document.createElement("tr")
 		
 		let rank = document.createElement("td")
@@ -51,12 +55,12 @@ function rankemup(){
 		let name = document.createElement("td")
 		name.setAttribute("height", "60")
 		name.setAttribute("class", "player-name")
-		name.innerHTML = LBJSon[i]["name"]
+		name.innerHTML = lbarr[i]["name"]
 		
 		let score = document.createElement("td")
 		score.setAttribute("height", "60")
 		score.setAttribute("class", "score-name")
-		score.innerHTML = LBJSon[i]["score"]
+		score.innerHTML = lbarr[i]["score"]
 		
 		main.appendChild(rank)
 		main.appendChild(name)
