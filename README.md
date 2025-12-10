@@ -48,10 +48,10 @@ pip install -r requirements.txt
 
 3. **Set up the database**
 
-Create a `.env` file in the **backend/** directory with your database credentials:
+Create a `.env` file in the root directory or in the directory you are running the app from - enter your database credentials like this:
 ```.env
-SQL_HOST=localhost
-SQL_PORT=3306
+SQL_HOST=your_sql_host
+SQL_PORT=your_sql_port
 SQL_USER=your_username
 SQL_PSWD=your_password
 DATABASE=your_database_name
