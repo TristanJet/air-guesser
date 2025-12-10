@@ -27,9 +27,15 @@ def connect():
             database=env["DATABASE"],
         )
         cur = conn.cursor()
+    except KeyError as e:
+        print("Error accessing env file values")
+        print("Info: Have you added your values to the .env file?")
+        print("Info: Check the README.md for instructions on creating the .env file")
+        exit()
     except mysql.connector.DatabaseError as e:
         print(f"Error: {e.msg}")
-        print(f"Info: Have you added your values to the .env file?")
+        print("Info: Have you added your values to the .env file?")
+        print("Info: Check the README.md for instructions on creating the .env file")
         exit()
 
 
