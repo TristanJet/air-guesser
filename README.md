@@ -48,8 +48,8 @@ pip install -r requirements.txt
 
 3. **Set up the database**
 
-Create a `.env` file in the project root with your database credentials:
-```env
+Create a `.env` file in the **backend/** directory with your database credentials:
+```.env
 SQL_HOST=localhost
 SQL_PORT=3306
 SQL_USER=your_username
@@ -67,7 +67,7 @@ Your MySQL database should have the following tables:
 
 1. **Start the Flask server**
 ```bash
-python routes.py
+python backend/src/routes.py
 ```
 
 2. **Open your browser**
